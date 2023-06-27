@@ -21,7 +21,8 @@ def whats_new(session):
     soup = BeautifulSoup(response.text, 'lxml')
     main_div = find_tag(soup, 'section', attrs={'id': 'what-s-new-in-python'})
     div_with_ul = find_tag(main_div, 'div', attrs={'class': 'toctree-wrapper'})
-    section_by_python = div_with_ul.find_all('li', attrs={'class': 'toctree-l1'})
+    section_by_python = div_with_ul.find_all('li',
+                                             attrs={'class': 'toctree-l1'})
 
     results = [('Ссылка на статью', 'Заголовок', 'Редактор, Автор')]
 
