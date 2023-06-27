@@ -150,12 +150,13 @@ def pep(session):
     return results
 
 
-MODE_TO_FUNCTION ={
+MODE_TO_FUNCTION = {
     'whats-new': whats_new,
     'latest-versions': latest_versions,
     'download': download,
     'pep': pep,
 }
+
 
 def main():
     try:
@@ -181,6 +182,7 @@ def main():
 
     except Exception as e:
         logging.exception(e)
+
 
 if __name__ == '__main__':
     main()
