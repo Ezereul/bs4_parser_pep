@@ -128,24 +128,30 @@ def pep(session):
 
     results = [('Статус', 'Количество')]
     counts = {}
+    bad_statuses = []
     for preview_status, pep_link in tqdm(pep_links):
         response = get_response(session, pep_link)
         if response is None:
             continue
         soup = BeautifulSoup(response.text, 'lxml')
-        current_status = soup.find(
-            string='Status').parent.next_sibling.next_sibling.text
+        current_status = find_tag(
+            soup, tag=None, string='Status'
+        ).parent.next_sibling.next_sibling.text
         status_count = counts.get(current_status, 0)
         counts[current_status] = status_count + 1
         if current_status not in EXPECTED_STATUS[preview_status]:
-            logging.info(f'Несовпадающие статусы:\n{pep_link}\n'
-                         f'Статус в карточке: {current_status}\n'
-                         f'Ожидаемые статусы: '
-                         f'{EXPECTED_STATUS[preview_status]}')
+            bad_statuses.append(
+                (pep_link, current_status, EXPECTED_STATUS[preview_status]))
 
-    for status, count in counts.items():
-        results.append((status, count))
-    results.append(('Total', len(pep_links)))
+    if bad_statuses:
+        for bad_status in bad_statuses:
+            logging.info(f'Несовпадающие статусы:\n{bad_status[0]}\n'
+                         f'Статус в карточке: {bad_status[1]}\n'
+                         f'Ожидаемые статусы: '
+                         f'{bad_status[2]}')
+
+    results.extend((counts.items()))
+    results.append(('Total', sum(counts.values())))
 
     return results
 
