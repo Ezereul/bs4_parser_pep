@@ -144,11 +144,12 @@ def pep(session):
                 (pep_link, current_status, EXPECTED_STATUS[preview_status]))
 
     if bad_statuses:
+        log_messages = []
         for bad_status in bad_statuses:
-            logging.info(f'Несовпадающие статусы:\n{bad_status[0]}\n'
-                         f'Статус в карточке: {bad_status[1]}\n'
-                         f'Ожидаемые статусы: '
-                         f'{bad_status[2]}')
+            log_messages.append(f'Несовпадающие статусы:\n{bad_status[0]}\n'
+                                f'Статус в карточке: {bad_status[1]}\n'
+                                f'Ожидаемые статусы: {bad_status[2]}')
+        logging.info('\n'.join(log_messages))
 
     results.extend((counts.items()))
     results.append(('Total', sum(counts.values())))
